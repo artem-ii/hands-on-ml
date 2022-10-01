@@ -659,20 +659,23 @@ There's an optimized "joblib" library based on pickle to save the models
 
 import joblib
 
-def save_model(model, data, cv_scores):
+def save_model(model, data, cv_scores, project_name):
     model_dump = {
         'model': model,
         'cv-scores': cv_scores,
         'predictions': model.predict(data)
         }
-    os.makedirs("processed_data", exist_ok=True)
-    dump_path = os.path.join("processed_data", str(model) + ".pkl")
+    dir_path = os.path.join("processed_data", project_name)
+    os.makedirs(dir_path, exist_ok=True)
+    dump_path = os.path.join("processed_data",
+                             project_name, str(model) + ".pkl")
     joblib.dump(model_dump, dump_path)
     print("Saved " + str(dump_path))
-    
-save_model(lin_reg, housing_prepared, lin_rmse_scores)
-save_model(tree_reg, housing_prepared, tree_rmse_scores)
-save_model(forest_reg, housing_prepared, forest_rmse_scores)
+
+project_name = "housing"
+save_model(lin_reg, housing_prepared, lin_rmse_scores, project_name)
+save_model(tree_reg, housing_prepared, tree_rmse_scores, project_name)
+save_model(forest_reg, housing_prepared, forest_rmse_scores, project_name)
 
 '''
 Saved processed_data/LinearRegression().pkl
@@ -835,3 +838,5 @@ np.sqrt(stats.t.interval(confidence, len(squared_errors) - 1,
 Out[82]: array([46039.75485988, 50017.30373821])
 
 '''
+
+save_model(final_model, X_test_prepared, final_rmse, project_name)
