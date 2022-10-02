@@ -138,3 +138,67 @@ especially for the skewed datasets
 
 '''
 
+# %%%% Confusion matrix
+
+'''
+
+This problem may be addressed by using a confusion matrix.
+It computes how often a model confuses each class with another class.
+
+'''
+
+from sklearn.model_selection import cross_val_predict
+
+y_train_pred = cross_val_predict(sgd_clf, X_train, y_train_5, cv=3)
+
+'''
+
+This is similar to cross_val_scores, but returns predictions
+of a model from cross-validation evaluation
+
+'''
+
+from sklearn.metrics import confusion_matrix
+
+confusion_matrix(y_train_5, y_train_pred)
+
+'''
+
+Out[118]: 
+array([[53892,   687],   <<< non-fives (negative class)
+       [ 1891,  3530]])  <<< fives (positive class)
+   correct^^^    ^^^incorrect predictions
+Each row is an actual class, and each column is a predicted class
+[1, 1] are true negatives, [2, 1] are false positives
+[1, 2] are false negatives, [2, 2] are true negatives
+
+A perfect confusion matrix looks like this
+
+'''
+
+y_train_perfect_predictions = y_train_5
+confusion_matrix(y_train_5, y_train_perfect_predictions)
+
+'''
+
+array([[54579,     0],
+       [    0,  5421]])
+A perfect prediction matrix has non-zero values only on the main diagonal.
+
+'''
+
+# %%%% Precision & Recall
+
+'''
+
+Precision is a more concise metric based on confusion matrix.
+It is calculated as follows:
+    TP / (TP + FP)
+(where TP is true positive etc)
+
+Recall
+or Sensitivity or True Positive Rate (TPR) is used together with precision:
+    TP / (TP + FN)
+    
+
+'''
