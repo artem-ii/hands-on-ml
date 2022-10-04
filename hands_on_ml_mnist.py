@@ -118,6 +118,7 @@ Hence the accuracy of "Never5Classifier"
 '''
 from sklearn.base import BaseEstimator
 
+
 class Never5Classifier(BaseEstimator):
     def fit(self, X, y=None):
         # Does nothing during training
@@ -167,7 +168,7 @@ confusion_matrix(y_train_5, y_train_pred)
 Out[118]: 
 array([[53892,   687],   <<< non-fives (negative class)
        [ 1891,  3530]])  <<< fives (positive class)
-   correct^^^    ^^^incorrect predictions
+ incorrect^^^    ^^^correct predictions
 Each row is an actual class, and each column is a predicted class
 [1, 1] are true negatives, [2, 1] are false positives
 [1, 2] are false negatives, [2, 2] are true negatives
@@ -202,3 +203,60 @@ or Sensitivity or True Positive Rate (TPR) is used together with precision:
     
 
 '''
+
+from sklearn.metrics import precision_score, recall_score
+
+precision_score(y_train_5, y_train_pred)
+recall_score(y_train_5, y_train_pred)
+
+'''
+
+precision_score(y_train_5, y_train_pred) - 3530 / (3530 + 687)
+Out[3]: 0.8370879772350012
+- model is correct 83.7% of times, when it predicts a five
+
+recall_score(y_train_5, y_train_pred) - 3530 / (3530 + 1891)
+Out[4]: 0.6511713705958311
+- model detects 65.1% of fives
+
+'''
+
+# %%%% F1 score
+
+'''
+
+Precision and recall may be combined into an F1 score
+
+
+F1 = TP / (
+    TP + ((FN + FP) / 2))
+
+F1 = precision * recall / (precision + recall)
+
+'''
+
+from sklearn.metrics import f1_score
+
+f1_score(y_train_5, y_train_pred)
+
+'''
+
+Out[5]: 0.7325171197343846
+
+F1 score favors classifiers with similar precision and recall
+
+'''
+
+# %%%% Precision/recall trade-off
+
+'''
+
+For a classifier of videos suitable for kids it's better that a model has 
+low recall (rejects many good videos) and high precision (keeps ONLY safe ones)
+
+For a classifier of shoplifters on a camera footage it's better with
+low precision (like 30%, signaling lots of non-shoplifters) and high recall
+(many false alerts, but still better - guards will decide).
+
+'''
+
