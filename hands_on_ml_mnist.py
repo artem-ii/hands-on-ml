@@ -257,5 +257,61 @@ For a classifier of shoplifters on a camera footage it's better with
 low precision (like 30%, signaling lots of non-shoplifters) and high recall
 (many false alerts, but still better - guards will decide).
 
+
+Stochastic Gradient Descent, for example, calculates the score for each
+object based on decision function. If the score is greater than threshold,
+then classifier assigns positive class, if less - negative.
+
+It is possible to display decision scores in scikit learn.
+
 '''
 
+some_digit = X.iloc[0,]
+
+some_digit_image = np.array(some_digit).reshape(28, 28)
+
+plt.imshow(some_digit_image, cmap="binary")
+
+y_scores = sgd_clf.decision_function([some_digit])
+y_scores
+threshold = 0
+y_some_digit_pred = (y_scores > threshold)
+y_some_digit_pred
+
+'''
+
+y_some_digit_pred
+Out[21]: array([ True])
+
+'''
+
+
+threshold = 8000
+y_some_digit_pred = (y_scores > threshold)
+y_some_digit_pred
+
+'''
+
+y_some_digit_pred
+Out[25]: array([False])
+
+Threshold increased and another class (FN) was assigned to a five.
+Raising threshold decreases recall.
+
+How to define threshold correctly?
+
+'''
+
+y_scores = cross_val_predict(sgd_clf, X_train, y_train_5, cv=3,
+                             method="decision_function")
+
+from sklearn.metrics import precision_recall_curve
+
+precisions, recalls, thresholds = precision_recall_curve(y_train_5, y_scores)
+
+def plot_precision_recall_vs_threshold(precisions, recalls, thresholds):
+    plt.plot(thresholds, precisions[:-1], "b--", label="Precision")
+    plt.plot(thresholds, recalls[:-1], "g-", label="Recall")
+    
+plot_precision_recall_vs_threshold(precisions, recalls, thresholds)
+plt.show()
